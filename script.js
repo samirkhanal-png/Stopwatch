@@ -62,12 +62,12 @@ function BreakTimeSelector(){
 }
 
 //Surumaa ta session Time nai active huncha 
-cntrlButton.addEventListener("click",()=>{
+cntrlButton.addEventListener("click",()=>{   currentSession.innerText="Current Session : Session Time "
     displayTime(sessTime)
 })
 
 function displayTime(time){
-   min=time-1
+   min=time
    sec=60
    id=setInterval(()=>{
     sec--
@@ -81,15 +81,26 @@ function displayTime(time){
 
 function changeSession(){
   if(!sessionFlag&&breakFlag){
+   sessionFlag=true
+   currentSession.innerText="Current Session : Break Time "
    displayTime(brkTime)
   }
   else if(!breakFlag&&sessionFlag){
-   displayTime(sessTime)
+    currentSession.innerText="Current Session : Break Time "
+    breakFlag=true 
+    displayTime(sessTime)
   }
 }
 
 function updateTimer(){
   let nMinute=min.toString().padStart(2,"0")
   let nSecond=sec.toString().padStart(2,"0")
-   upperSection.innerHTML=`<h2>${min}:${sec}</h2>`=`${nMinute}:${nSecond}`
+   upperSection.innerHTML=`<h2>${nMinute}:${nSecond}</h2>`
+
+   //Change session
+   if (min === 0 && sec === 0) {
+    clearInterval(id); 
+    changeSession(); 
+  }
+
 }
