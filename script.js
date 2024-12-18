@@ -21,8 +21,8 @@ const btnControls = document.querySelector('#btnControls');
 const cntrlButton = btnControls.querySelector('button:nth-child(1)');
 const resetButton = btnControls.querySelector('button:nth-child(2)');
 
-let sessTime=0
-let brkTime=0
+let sessTime=1
+let brkTime=1
 let min=0
 let sec=0
 
@@ -67,13 +67,18 @@ cntrlButton.addEventListener("click",()=>{   currentSession.innerText="Current S
 })
 
 function displayTime(time){
-   min=time
+   min=time-1
    sec=60
    id=setInterval(()=>{
     sec--
     if(sec==0){
       sec=60
       if(min>=1)min--
+      else{
+        clearInterval(id)
+        //Changing session
+        changeSession()
+      }
     }
     updateTimer()
   },1000)
@@ -82,13 +87,15 @@ function displayTime(time){
 function changeSession(){
   if(!sessionFlag&&breakFlag){
    sessionFlag=true
-   currentSession.innerText="Current Session : Break Time "
-   displayTime(brkTime)
+   breakFlag=false
+   currentSession.innerText="Current Session : Session Time "
+   displayTime(sessTime)
   }
   else if(!breakFlag&&sessionFlag){
     currentSession.innerText="Current Session : Break Time "
     breakFlag=true 
-    displayTime(sessTime)
+    sessionFlag=false
+    displayTime(brkTime)
   }
 }
 
@@ -96,11 +103,5 @@ function updateTimer(){
   let nMinute=min.toString().padStart(2,"0")
   let nSecond=sec.toString().padStart(2,"0")
    upperSection.innerHTML=`<h2>${nMinute}:${nSecond}</h2>`
-
-   //Change session
-   if (min === 0 && sec === 0) {
-    clearInterval(id); 
-    changeSession(); 
-  }
-
 }
+
